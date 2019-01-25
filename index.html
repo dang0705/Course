@@ -1,0 +1,69 @@
+<!DOCTYPE html >
+<html class='box'>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title id="title">欧尚</title>
+  <style>
+    .box {
+      overflow: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    body, html {
+      height: 100%;
+      width: 100%;
+      overflow: scroll;
+   
+      /*display: -webkit-flex;*/
+      /*min-height: 100vh;*/
+      /*flex-direction: column;*/
+    }
+    body{
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body class='scroll'>
+<div id="app"></div>
+<script>
+
+  var overscroll = function (el) {
+    el.addEventListener('touchstart', function () {
+      var top = el.scrollTop
+        , totalScroll = el.scrollHeight
+        , currentScroll = top + el.offsetHeight;
+      //If we're at the top or the bottom of the containers
+      //scroll, push up or down one pixel.
+      //
+      //this prevents the scroll from "passing through" to
+      //the body.
+      if ( top === 0 ) {
+        el.scrollTop = 1
+      } else if ( currentScroll === totalScroll ) {
+        el.scrollTop = top - 1
+      }
+    })
+    el.addEventListener('touchmove', function (evt) {
+      //if the content is actually scrollable, i.e. the content is long enough
+      //that scrolling can occur
+      if ( el.offsetHeight <= el.scrollHeight )
+        evt._isScroller = true
+    })
+  };
+  window.onload = function () {
+    overscroll(document.querySelector('.scroll'));
+    document.body.addEventListener('touchmove', function (evt) {
+      console.log(evt);
+      if ( !evt._isScroller ) {
+        evt.preventDefault();
+      }
+    },false);
+  }
+</script>
+<!-- built files will be auto injected -->
+</body>
+</html>

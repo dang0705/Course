@@ -39,7 +39,7 @@
             break;
           default:
             this.isShowBack = false;
-            this.xHeaderText = '兴趣培训';
+            this.xHeaderText = '首页';
         }
         
         // console.log(this.isShowBack);
@@ -57,6 +57,10 @@
     },
     mounted() {
       this.openid = this.getUrlParam('openid');
+      if ( navigator.userAgent.includes('iPhone') ) {
+        this.$inobounce.enable()
+      }
+  
       // alert(this.openid)
       // console.log(location.search);
     }
@@ -68,6 +72,6 @@
     height: 100vh;
     flex: 1;
     width: 100%;
-    overflow: scroll;
+    /*overflow: scroll;*/
   }
 </style>

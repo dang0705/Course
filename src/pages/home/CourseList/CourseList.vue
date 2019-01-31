@@ -31,12 +31,14 @@
     </ul>
     
     <divider v-show="isDividerShow">{{ dividerText }}</divider>
-    <button id="scrollToTop" v-show="isToTopShow" @click="scrollToTop">↑</button>
+    <!--<button id="scrollToTop" v-show="isToTopShow" @click="scrollToTop">↑</button>-->
   </div>
 </template>
 
 <script>
   import {Divider} from 'vux'
+  import inobounce from '@/assets/js/inobounce.min'
+
   
   export default {
     name: "CourseList",
@@ -49,7 +51,7 @@
         homeTop: 0,
         titleImg: '',
         dividerText: '已经到底啦',
-        isDividerShow: false,
+        isDividerShow: true,
         isToTopShow: false,
         courseList: []
       }
@@ -102,7 +104,8 @@
         vm => {
           vm.titleImg = params.tab_img;
           vm.courseList = JSON.parse(params.courseList);
-          vm.isDividerShow = vm.isToTopShow = false
+          vm.isToTopShow = false;
+          // inobounce.enable()
         }
       )
     }
@@ -113,7 +116,8 @@
   #courseList
     padding-top: 36px
     height 100%
-    overflow scroll
+    overflow: scroll;
+    overflow-scrolling: touch;
     
     .course-item
       padding 4%
@@ -132,6 +136,7 @@
         height: 25vw
         position: relative
         padding-left: 4%
+        
         .header
           overflow hidden
           font-size 1.2rem
@@ -155,12 +160,14 @@
           -webkit-line-clamp 1
           text-overflow ellipsis
           overflow hidden
+        
         .number
           color #cc6733
           font-size: 1rem
           height: 4vh
           line-height: 4vh
           letter-spacing .1rem
+        
         .footer
           font-size: 1rem
           width 100%
@@ -168,20 +175,24 @@
           text-overflow ellipsis
           white-space nowrap
           color #a8a8a8
-     /*     position: absolute
-          bottom: 0
-          left: 0*/
+    
+    /*     position: absolute
+		 bottom: 0
+		 left: 0*/
     
     #scrollToTop
       position: absolute
-      width: 10vw
-      height: 10vw
+      width: 15vw
+      height: 15vw
       background #cc6733
       border-radius 50%
       border: none
       color #fff
-      z-index 99
+      font-size 2.5rem
+      line-height: 15vw
+      text-align center
+      z-index 999999
       right: 5vw
-      bottom: 5vh
+      bottom: 10vh
       opacity: .8
 </style>

@@ -6,29 +6,13 @@
       dots-position="center"
       height="250px"
     >
-      <!--<router-link
+      <swiper-item
         v-for="(item,index) of banner_list"
-        tag="div"
-        class="vux-swiper-item"
-        :to="{
-          name: 'courseDetails',
-          params: {
-            id:item.CourseId,
-            img:item.Image}
-            }"
-      >-->
-         <swiper-item
-		   v-for="(item,index) of banner_list"
-		   :key="index"
-		   @click.native="swiperItemClick({id:item.CourseId,img:item.Image})"
-		 >
+        :key="index"
+        @click.native="swiperItemClick({id:item.CourseId,img:item.Image})"
+      >
         <div id="modal"></div>
-        <!--<div id="banner_text">
-          <h1>{{item.CourseTitle}}</h1>
-          <h1 class="eng">{{item.CourseViceTitle}}</h1>
-        </div>-->
         <img width="100%" :src="item.Image" alt="">
-      <!--</router-link>-->
       </swiper-item>
     </swiper>
     <div id="tabWrapper">
@@ -55,11 +39,19 @@
     <div v-transfer-dom>
       <loading :show="isLoadingShow" text="数据加载中"></loading>
     </div>
+    <div v-transfer-dom>
+      <alert
+        v-model="alert_show"
+        hide-on-blur
+        :title="alert_title"
+      >{{alert_text}}
+      </alert>
+    </div>
   </div>
 </template>
 
 <script>
-  import {Swiper, SwiperItem, Tab, TabItem, Loading, TransferDomDirective as TransferDom,} from 'vux'
+  import {Swiper, SwiperItem, Tab, TabItem, Loading, Alert, TransferDomDirective as TransferDom,} from 'vux'
   
   // const storage = window.localStorage;
   
@@ -73,23 +65,32 @@
       SwiperItem,
       Tab,
       TabItem,
+      Alert,
       Loading
     },
     data() {
       return {
+        alert_show: false,
+        alert_title: '',
+        alert_text: '',
         banner_index: 0,
         banner_list: [],
         courseList: [],
         tab_index: 0,
         tab_id: 0,
         tab_img: '',
-        isLoadingShow: true,
+        isLoadingShow: false,
         tab_list: [ {
           Image: '',
         } ],
       }
     },
     methods: {
+      fail_alert(ctx) {
+        this.alert_show = true;
+        this.alert_title = ctx;
+        this.alert_text = ``;
+      },
       beforeRouteLeave(to, from, next) {
         console.log('leave');
         console.log(this.tab_index);
@@ -117,8 +118,11 @@
         // this.$router.push('/CourseList/'+this.tab_id)
         // storage.setItem('tab_img', this.tab_img);
         const that = this;
+        that.isLoadingShow = true;
+  
         that.$axios.post(`/yl/YLHandler.ashx?type=AuchanCourse&action=courselist&sortid=${sortID}`)
           .then(data => {
+            that.isLoadingShow = false;
             if ( data.data.Status === '200' ) {
               this.courseList = data.data.data;
               this.$router.push(
@@ -129,6 +133,8 @@
                     tab_img: this.tab_img
                   }
                 })
+            } else {
+              that.fail_alert('敬请期待。。。')
             }
           });
         
@@ -136,13 +142,18 @@
       ,
       getSwiperList() {
         const that = this;
+        that.isLoadingShow = true;
+  
         /*  params = new URLSearchParams();
         params.append('type', 'AuchanCourse');
         params.append('action', 'kvlist');*/
         that.$axios.post('/yl/YLHandler.ashx?type=AuchanCourse&action=kvlist').then(data => {
           // console.log(data);
+          that.isLoadingShow = false;
           if ( data.data.Status === '200' ) {
             that.banner_list = data.data.data
+          }else {
+            that.fail_alert('敬请期待。。。')
           }
         })
       }
@@ -152,12 +163,12 @@
         that.isLoadingShow = true;
         that.$axios.post('/yl/YLHandler.ashx?type=AuchanCourse&action=menulist').then(data => {
           // console.log(data);
+          that.isLoadingShow = false;
           if ( data.data.Status === '200' ) {
             that.tab_list = data.data.data;
             that.tab_id = that.tab_list[ 0 ].SortId;
             that.tab_img = that.tab_list[ 0 ].Image;
           }
-          that.isLoadingShow = false;
         })
       }
     },

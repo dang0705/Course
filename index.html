@@ -12,25 +12,25 @@
     body, html {
       height: 100%;
       width: 100%;
-      overflow: scroll;
-   
+      /*overflow: scroll;*/
       /*display: -webkit-flex;*/
       /*min-height: 100vh;*/
       /*flex-direction: column;*/
     }
-    body{
+    
+   /* body {
       position: fixed;
       left: 0;
       top: 0;
       right: 0;
       bottom: 0;
-    }
+    }*/
   </style>
 </head>
 <body class='scroll'>
 <div id="app"></div>
 <script>
-
+  
   var overscroll = function (el) {
     el.addEventListener('touchstart', function () {
       var top = el.scrollTop
@@ -50,18 +50,21 @@
     el.addEventListener('touchmove', function (evt) {
       //if the content is actually scrollable, i.e. the content is long enough
       //that scrolling can occur
-      if ( el.offsetHeight <= el.scrollHeight )
+      if ( el.offsetHeight < el.scrollHeight )
         evt._isScroller = true
     })
   };
   window.onload = function () {
-    overscroll(document.querySelector('.scroll'));
-    document.body.addEventListener('touchmove', function (evt) {
-      console.log(evt);
-      if ( !evt._isScroller ) {
-        evt.preventDefault();
-      }
-    },false);
+    if ( navigator.userAgent.indexOf('iPhone') < 0 ) {
+      overscroll(document.querySelector('.scroll'));
+      document.body.addEventListener('touchmove', function (evt) {
+        console.log(evt);
+        if ( !evt._isScroller ) {
+          evt.preventDefault();
+        }
+      }, false);
+    }
+    
   }
 </script>
 <!-- built files will be auto injected -->

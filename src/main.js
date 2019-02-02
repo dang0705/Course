@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import fastClick from 'fastclick'
+// import fastClick from 'fastclick'
 import './assets/css/reset.css'
 import './assets/css/H5Reset.css'
 import './assets/css/common.styl'
@@ -14,7 +14,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
 Vue.prototype.$inobounce = inobounce;
 
-fastClick.attach(document.body);
+// fastClick.attach(document.body);
 
 /* eslint-disable no-new */
 new Vue({

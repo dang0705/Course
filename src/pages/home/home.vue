@@ -22,7 +22,7 @@
           v-for="(item,index) of tab_list"
           :selected="!index?true:false"
           :key="index"
-          @on-item-click=tabClick
+          @click.native=tabClick(index)
         >
           {{item.SortName}}
         </tab-item>
@@ -109,9 +109,12 @@
       }
       ,
       tabClick(index) {
-        this.tab_index = index;
-        this.tab_id = this.tab_list[ index ].SortId;
-        this.tab_img = this.tab_list[ index ].Image;
+        setTimeout(()=>{
+          this.tab_index = index;
+          this.tab_id = this.tab_list[ index ].SortId;
+          this.tab_img = this.tab_list[ index ].Image;
+  
+        },0)
       }
       ,
       gotoContent(sortID) {

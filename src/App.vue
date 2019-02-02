@@ -1,5 +1,5 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <x-header :left-options="{backText: '',showBack: isShowBack}">{{xHeaderText}}</x-header>
     <keep-alive include="CourseList,home">
       <router-view/>
@@ -60,7 +60,7 @@
       if ( navigator.userAgent.includes('iPhone') ) {
         this.$inobounce.enable()
       }
-  
+      
       // alert(this.openid)
       // console.log(location.search);
     }
@@ -69,9 +69,11 @@
 
 <style>
   #app {
-    height: 100vh;
+    height: 100%;
     flex: 1;
     width: 100%;
-    /*overflow: scroll;*/
+    overflow: scroll;
+    overflow-scrolling: touch;
+  
   }
 </style>

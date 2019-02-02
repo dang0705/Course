@@ -2,11 +2,14 @@
 <html class='box'>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
   <title id="title">欧尚</title>
   <style>
     .box {
-      overflow: hidden;
+      overflow: scroll;
       -webkit-overflow-scrolling: touch;
     }
     body, html {
@@ -17,14 +20,13 @@
       /*min-height: 100vh;*/
       /*flex-direction: column;*/
     }
-    
-   /* body {
+    body {
       position: fixed;
       left: 0;
       top: 0;
       right: 0;
       bottom: 0;
-    }*/
+    }
   </style>
 </head>
 <body class='scroll'>
@@ -54,17 +56,18 @@
         evt._isScroller = true
     })
   };
+  if ( navigator.userAgent.indexOf('iPhone') < 0 ) {
+/*    overscroll(document.querySelector('.scroll'));
+    document.body.addEventListener('touchmove', function (evt) {
+      console.log(evt);
+      if ( !evt._isScroller ) {
+        evt.preventDefault();
+      }
+    });*/
+  }
   window.onload = function () {
-    if ( navigator.userAgent.indexOf('iPhone') < 0 ) {
-      overscroll(document.querySelector('.scroll'));
-      document.body.addEventListener('touchmove', function (evt) {
-        console.log(evt);
-        if ( !evt._isScroller ) {
-          evt.preventDefault();
-        }
-      }, false);
-    }
-    
+  
+  
   }
 </script>
 <!-- built files will be auto injected -->

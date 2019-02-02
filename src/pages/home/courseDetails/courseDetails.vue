@@ -93,6 +93,15 @@
         :content="alert_content"
       >
       </alert>
+      <div v-transfer-dom>
+        <confirm v-model="confirm_show"
+                 :title="confirm_title"
+                 :content="confirm_content"
+                 :show-cancel-button="false"
+                 @on-confirm="onConfirm"
+        >
+        </confirm>
+      </div>
     </div>
     <loading :show="is_loading" text="请稍后。。。"></loading>
   </div>
@@ -108,7 +117,8 @@
     FlexboxItem,
     Alert,
     TransferDomDirective as TransferDom,
-    Loading
+    Loading,
+    Confirm
   } from 'vux'
   
   export default {
@@ -124,7 +134,8 @@
       Flexbox,
       FlexboxItem,
       Alert,
-      Loading
+      Loading,
+      Confirm
     },
     data() {
       return {
@@ -147,7 +158,10 @@
         alert_show: false,
         alert_content: '',
         alert_title: '',
-        is_loading: false
+        is_loading: false,
+        confirm_show: false,
+        confirm_content: '',
+        confirm_title: '预约成功'
       }
     },
     methods: {
@@ -195,6 +209,9 @@
         this.alert_title = ctx;
         this.alert_content = ``;
       },
+      onConfirm() {
+        this.$router.push('/')
+      },
       confirm(fullValue) {
         // console.log(this.$refs[ fullValue ].getFullValue());
         let time, hours, CourseTitle, am_pm, myDate, getFullValue;
@@ -233,18 +250,20 @@
               that.code = '';
               that.stopInterval(that);
               that.is_loading = false;
-              that.alert_show = true;
               if ( status === '200' ) {
                 that.cancel();
-                that.alert_title = '预约成功！';
-                that.alert_content = `亲爱的${that.name}，请于：</br>
+                that.confirm_show=true;
+                that.confirm_title = '预约成功！';
+                that.confirm_content = `亲爱的${that.name}，请于：</br>
                                       ${myDate}${am_pm}${time}参与</br>
-                                     ”${CourseTitle}“的课程`
+                                     ”${CourseTitle}“的课程`;
               } else if ( status === '1' ) {
+                that.alert_show = true;
                 that.alert_title = '验证码错误';
                 that.alert_content = `您输入的验证码有误</br>
                                       请核对后重新输入`
               } else if ( status === '2' ) {
+                that.alert_show = true;
                 that.alert_title = '该课程已预约';
                 that.alert_content = `抱歉，您已经预约过该节课程。</br>
                                       请选择其他课程进行预约。`

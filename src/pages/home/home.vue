@@ -15,26 +15,38 @@
         <img width="100%" :src="item.Image" alt="">
       </swiper-item>
     </swiper>
-    <div id="tabWrapper">
-      <tab>
-        <tab-item
-          active-color="#cc6733"
-          v-for="(item,index) of tab_list"
-          :selected="!index?true:false"
-          :key="index"
-          @click.native=tabClick(index)
-        >
-          {{item.SortName}}
-        </tab-item>
-      
-      </tab>
-      <div id="contentImgWrapper"
-           @click="gotoContent(tab_id)"
-      >
-        <img id="contentImg" width="100%" alt=""
-             :src="tab_list[tab_index].Image"
-        >
+    
+    <div id="tab_box">
+      <div id="tabWrapper">
+        <ul id="tab">
+          <li
+            v-for="(item,index) of tab_list"
+            :class="{isActive:index===tab_index,tab:true}"
+            @click=tabClick(index,$event)
+          >
+            {{item.SortName}}
+          
+          </li>
+        </ul>
       </div>
+    </div>
+    <!--      <tab>
+			<tab-item
+			  active-color="#cc6733"
+			  v-for="(item,index) of tab_list"
+			  :selected="!index?true:false"
+			  :key="index"
+			  @click.native=tabClick(index)
+			>
+			  {{item.SortName}}
+			</tab-item>
+		  </tab>-->
+    <div id="contentImgWrapper"
+         @click="gotoContent(tab_id)"
+    >
+      <img id="contentImg" width="100%" alt=""
+           :src="tab_list[tab_index].Image"
+      >
     </div>
     <div v-transfer-dom>
       <loading :show="isLoadingShow" text="数据加载中"></loading>
@@ -53,8 +65,6 @@
 <script>
   import {Swiper, SwiperItem, Tab, TabItem, Loading, Alert, TransferDomDirective as TransferDom,} from 'vux'
   
-  // const storage = window.localStorage;
-  
   export default {
     name: "home",
     directives: {
@@ -70,6 +80,8 @@
     },
     data() {
       return {
+        window_width: '',
+        isActive: false,
         alert_show: false,
         alert_title: '',
         alert_text: '',
@@ -108,13 +120,22 @@
         })
       }
       ,
-      tabClick(index) {
-        setTimeout(()=>{
-          this.tab_index = index;
-          this.tab_id = this.tab_list[ index ].SortId;
-          this.tab_img = this.tab_list[ index ].Image;
-  
-        },0)
+      tabClick(index, evt) {
+        console.log(evt);
+        const target = evt.target,
+          tabWrapper = document.getElementById('tabWrapper');
+        if ( target.offsetWidth + target.offsetLeft > this.window_width || (this.tab_list.length > 3 && index >= 2) ) {
+          
+          tabWrapper.scrollLeft = target.offsetLeft
+        } else {
+          tabWrapper.scrollLeft = 0
+          
+        }
+        this.isActive = true;
+        this.tab_index = index;
+        this.tab_id = this.tab_list[ index ].SortId;
+        this.tab_img = this.tab_list[ index ].Image;
+        
       }
       ,
       gotoContent(sortID) {
@@ -122,7 +143,7 @@
         // storage.setItem('tab_img', this.tab_img);
         const that = this;
         that.isLoadingShow = true;
-  
+        
         that.$axios.post(`/yl/YLHandler.ashx?type=AuchanCourse&action=courselist&sortid=${sortID}`)
           .then(data => {
             that.isLoadingShow = false;
@@ -146,7 +167,7 @@
       getSwiperList() {
         const that = this;
         that.isLoadingShow = true;
-  
+        
         /*  params = new URLSearchParams();
         params.append('type', 'AuchanCourse');
         params.append('action', 'kvlist');*/
@@ -155,7 +176,7 @@
           that.isLoadingShow = false;
           if ( data.data.Status === '200' ) {
             that.banner_list = data.data.data
-          }else {
+          } else {
             that.fail_alert('敬请期待。。。')
           }
         })
@@ -179,6 +200,7 @@
       this.getSwiperList();
       this.getTabList();
       this.isLoadingShow = false;
+      this.window_width = document.body.clientWidth
     }
   }
 </script>
@@ -187,6 +209,7 @@
   #home
     padding-top: 36px
     height: 100%
+    overflow-y hidden
     
     .vux-slider
       color #fff
@@ -212,20 +235,34 @@
         .eng
           font-weight normal
     
-    #tabWrapper
-      margin-top: 20px
+    #tab_box
+      width: 100%
+      height: 8vh
       
-      .vux-button-group
-        margin 5% auto
-        width: 90%
-      
-      #contentImgWrapper
-        width: 90%
-        /*height: 30.9%*/
-        overflow hidden
-        display block
-        margin 5% auto
-        border-radius 5px
-        box-shadow 3px 3px 8px rgba(0, 0, 0, .4)
+      #tabWrapper
+        width: 100%
+        margin-top: 20px
+        overflow-x scroll
+        overflow-scrolling touch
+      ul
+        display flex
+        width: 120%
+        .isActive
+          color #cc6733
+          border-bottom: 3px solid #cc6733
+        
+        .tab
+          white-space nowrap
+          padding 1% 4%
+          box-sizing border-box
+          flex: 1
+    
+    #contentImgWrapper
+      width: 90%
+      height: 30vh
+      overflow hidden
+      margin 5% auto
+      border-radius 5px
+      box-shadow 3px 3px 8px rgba(0, 0, 0, .4)
 
 </style>

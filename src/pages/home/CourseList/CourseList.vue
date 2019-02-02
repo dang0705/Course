@@ -105,7 +105,9 @@
           vm.titleImg = params.tab_img;
           vm.courseList = JSON.parse(params.courseList);
           vm.isToTopShow = false;
-          // inobounce.enable()
+          if ( navigator.userAgent.includes('iPhone') ) {
+            vm.$inobounce.enable()
+          }
         }
       )
     }

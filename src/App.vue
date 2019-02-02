@@ -57,9 +57,7 @@
     },
     mounted() {
       this.openid = this.getUrlParam('openid');
-      if ( navigator.userAgent.includes('iPhone') ) {
-        this.$inobounce.enable()
-      }
+
       
       // alert(this.openid)
       // console.log(location.search);
@@ -70,7 +68,7 @@
 <style>
   #app {
     height: 100%;
-    flex: 1;
+    /*flex: 1;*/
     width: 100%;
     overflow: scroll;
     overflow-scrolling: touch;
